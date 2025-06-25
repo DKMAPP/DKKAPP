@@ -1,186 +1,207 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Clientes - Máquinas DKM</title>
+    <title>Client and Machine Selection App</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div id="app" class="container mx-auto p-4">
-        <!-- Pantalla Principal -->
-        <div id="main-screen" class="flex flex-col items-center justify-center h-screen">
-            <h1 class="text-3xl font-bold mb-8">Gestión de Clientes</h1>
-            <button id="new-client-btn" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">Nuevo Cliente</button>
-        </div>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const machines = [
+            'DKM-130SV', 'DKM-180SV', 'DKM-250SV', 'DKM-350SV', 'DKM-450SV',
+            'DKM-550SV', 'DKM-650SV', 'DKM-850SV', 'DKM-1150SV', 'DKM-1350SV',
+            'DKM-1650SV', 'DKM-2250SV', 'DKM-2800SV'
+        ];
 
-        <!-- Formulario de Cliente -->
-        <div id="client-form-screen" class="hidden flex flex-col items-center justify-center h-screen">
-            <h2 class="text-2xl font-bold mb-6">Datos del Cliente</h2>
-            <form id="client-form" class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-                <div class="mb-4">
-                    <label class="block text-gray-700">Nombre</label>
-                    <input type="text" id="name" class="w-full p-2 border rounded" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">Empresa</label>
-                    <input type="text" id="company" class="w-full p-2 border rounded" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">Teléfono</label>
-                    <input type="tel" id="phone" class="w-full p-2 border rounded" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">Mail</label>
-                    <input type="email" id="email" class="w-full p-2 border rounded" required>
-                </div>
-                <button type="button" id="grok-link-btn" class="bg-green-500 text-white px-4 py-2 rounded mb-4 w-full hover:bg-green-600">
-                    Visitar Grok AI
-                </button>
-                <div class="mb-4">
-                    <label class="block text-gray-700">Seleccionar Máquina</label>
-                    <select id="machine-select" class="w-full p-2 border rounded" required>
-                        <option value="">Seleccione una máquina</option>
-                        <option value="DKM-130SV">DKM-130SV</option>
-                        <option value="DKM-180SV">DKM-180SV</option>
-                        <option value="DKM-250SV">DKM-250SV</option>
-                        <option value="DKM-350SV">DKM-350SV</option>
-                        <option value="DKM-450SV">DKM-450SV</option>
-                        <option value="DKM-550SV">DKM-550SV</option>
-                        <option value="DKM-650SV">DKM-650SV</option>
-                        <option value="DKM-850SV">DKM-850SV</option>
-                        <option value="DKM-1150SV">DKM-1150SV</option>
-                        <option value="DKM-1350SV">DKM-1350SV</option>
-                        <option value="DKM-1650SV">DKM-1650SV</option>
-                        <option value="DKM-2250SV">DKM-2250SV</option>
-                        <option value="DKM-2800SV">DKM-2800SV</option>
-                    </select>
-                </div>
-                <div id="machine-specs" class="hidden bg-gray-50 p-4 rounded mb-4"></div>
-                <button type="submit" id="next-btn" class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Siguiente</button>
-            </form>
-        </div>
+        // Simulated machine specs (replace with actual data from dakumar.com)
+        const machineSpecs = {
+            'DKM-130SV': { screwDiameterB: '32 mm', tieBarDistance: '360 x 360 mm', injectionWeight: '100 g' },
+            'DKM-180SV': { screwDiameterB: '36 mm', tieBarDistance: '410 x 410 mm', injectionWeight: '150 g' },
+            'DKM-250SV': { screwDiameterB: '40 mm', tieBarDistance: '460 x 460 mm', injectionWeight: '200 g' },
+            'DKM-350SV': { screwDiameterB: '45 mm', tieBarDistance: '510 x 510 mm', injectionWeight: '300 g' },
+            'DKM-450SV': { screwDiameterB: '50 mm', tieBarDistance: '560 x 560 mm', injectionWeight: '400 g' },
+            'DKM-550SV': { screwDiameterB: '55 mm', tieBarDistance: '610 x 610 mm', injectionWeight: '500 g' },
+            'DKM-650SV': { screwDiameterB: '60 mm', tieBarDistance: '660 x 660 mm', injectionWeight: '600 g' },
+            'DKM-850SV': { screwDiameterB: '65 mm', tieBarDistance: '710 x 710 mm', injectionWeight: '800 g' },
+            'DKM-1150SV': { screwDiameterB: '70 mm', tieBarDistance: '760 x 760 mm', injectionWeight: '1000 g' },
+            'DKM-1350SV': { screwDiameterB: '75 mm', tieBarDistance: '810 x 810 mm', injectionWeight: '1200 g' },
+            'DKM-1650SV': { screwDiameterB: '80 mm', tieBarDistance: '860 x 860 mm', injectionWeight: '1500 g' },
+            'DKM-2250SV': { screwDiameterB: '85 mm', tieBarDistance: '910 x 910 mm', injectionWeight: '2000 g' },
+            'DKM-2800SV': { screwDiameterB: '90 mm', tieBarDistance: '960 x 960 mm', injectionWeight: '2500 g' }
+        };
 
-        <!-- Pantalla de Consejo -->
-        <div id="advice-screen" class="hidden flex flex-col items-center justify-center h-screen">
-            <h2 class="text-2xl font-bold mb-6">Consejo de IA</h2>
-            <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-                <p class="mb-4">Consulta adicional en: <a href="https://grok.com/?ref=aiartweekly" target="_blank" class="text-blue-500 underline">Grok AI</a></p>
-                <div id="ai-advice" class="bg-gray-50 p-4 rounded mb-4"></div>
-                <button id="exit-btn" class="bg-red-500 text-white px-4 py-2 rounded w-full hover:bg-red-600">Salir</button>
-            </div>
-        </div>
-    </div>
+        // Simulated pricing data (replace with actual data from Google Sheet)
+        const machinePrices = {
+            'DKM-130SV': '$50,000', 'DKM-180SV': '$60,000', 'DKM-250SV': '$70,000',
+            'DKM-350SV': '$80,000', 'DKM-450SV': '$90,000', 'DKM-550SV': '$100,000',
+            'DKM-650SV': '$110,000', 'DKM-850SV': '$120,000', 'DKM-1150SV': '$130,000',
+            'DKM-1350SV': '$140,000', 'DKM-1650SV': '$150,000', 'DKM-2250SV': '$160,000',
+            'DKM-2800SV': '$170,000'
+        };
 
-    <script>
-        // Configuración de Google Sheets API (necesitas tu propia clave API y ID de la hoja)
-        const SPREADSHEET_ID = '1GTY9WtufW1ZuOV2j8y23rBa8fsCDHXic-7X5YaBnjr8';
-        const API_KEY = 'YOUR_GOOGLE_API_KEY'; // Reemplaza con tu clave API de Google
-        const SHEET_NAME = 'Sheet1'; // Ajusta según el nombre de la hoja
+        function App() {
+            const [screen, setScreen] = React.useState('main');
+            const [formData, setFormData] = React.useState({
+                name: '', email: '', company: '', phone: '', address: ''
+            });
+            const [selectedMachine, setSelectedMachine] = React.useState('');
 
-        // Elementos del DOM
-        const mainScreen = document.getElementById('main-screen');
-        const clientFormScreen = document.getElementById('client-form-screen');
-        const adviceScreen = document.getElementById('advice-screen');
-        const newClientBtn = document.getElementById('new-client-btn');
-        const clientForm = document.getElementById('client-form');
-        const grokLinkBtn = document.getElementById('grok-link-btn');
-        const machineSelect = document.getElementById('machine-select');
-        const machineSpecs = document.getElementById('machine-specs');
-        const nextBtn = document.getElementById('next-btn');
-        const exitBtn = document.getElementById('exit-btn');
-
-        // Datos del cliente
-        let clientData = {};
-
-        // Mostrar formulario
-        newClientBtn.addEventListener('click', () => {
-            mainScreen.classList.add('hidden');
-            clientFormScreen.classList.remove('hidden');
-        });
-
-        // Configurar botón de Grok
-        grokLinkBtn.addEventListener('click', () => {
-            window.open('https://grok.com/?ref=aiartweekly', '_blank');
-        });
-
-        // Obtener especificaciones de la máquina
-        machineSelect.addEventListener('change', async () => {
-            const machine = machineSelect.value;
-            if (!machine) {
-                machineSpecs.classList.add('hidden');
-                return;
-            }
-
-            try {
-                const response = await axios.get(
-                    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}!A1:Z100?key=${API_KEY}`
-                );
-                const rows = response.data.values;
-                const headers = rows[0];
-                const machineRow = rows.find(row => row[0] === machine);
-
-                if (machineRow) {
-                    let specsHtml = '<h3 class="font-bold">Especificaciones:</h3><ul>';
-                    for (let i = 1; i < headers.length; i++) {
-                        if (machineRow[i]) {
-                            specsHtml += `<li><strong>${headers[i]}:</strong> ${machineRow[i]}</li>`;
-                        }
-                    }
-                    specsHtml += '</ul>';
-                    machineSpecs.innerHTML = specsHtml;
-                    machineSpecs.classList.remove('hidden');
-                } else {
-                    machineSpecs.innerHTML = '<p class="text-red-500">No se encontraron especificaciones.</p>';
-                    machineSpecs.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Error al obtener datos:', error);
-                machineSpecs.innerHTML = '<p class="text-red-500">Error al cargar especificaciones.</p>';
-                machineSpecs.classList.remove('hidden');
-            }
-        });
-
-        // Manejar formulario
-        clientForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            clientData = {
-                name: document.getElementById('name').value,
-                company: document.getElementById('company').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                machine: machineSelect.value
+            const handleFormChange = (e) => {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
             };
 
-            if (!clientData.machine) {
-                alert('Por favor, seleccione una máquina.');
-                return;
-            }
+            const handleMachineSelect = (e) => {
+                setSelectedMachine(e.target.value);
+            };
 
-            // Mostrar pantalla de consejo
-            clientFormScreen.classList.add('hidden');
-            adviceScreen.classList.remove('hidden');
+            const renderMainScreen = () => (
+                <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+                    <h1 className="text-3xl font-bold mb-8">Client Management</h1>
+                    <button
+                        onClick={() => setScreen('form')}
+                        className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
+                    >
+                        New Client
+                    </button>
+                </div>
+            );
 
-            // Simular consejo de IA basado en dakumar.com
-            const aiAdvice = document.getElementById('ai-advice');
-            // Nota: No puedo acceder directamente a dakumar.com, así que simulo un consejo genérico
-            aiAdvice.innerHTML = `
-                <p><strong>Consejo de IA:</strong> Basado en la información de Dakumar, para la máquina ${clientData.machine}, recomendamos optimizar el ciclo de producción para maximizar la eficiencia energética y reducir costos operativos. Considere integrar sistemas de monitoreo en tiempo real para mejorar el mantenimiento predictivo.</p>
-            `;
-        });
+            const renderFormScreen = () => (
+                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+                    <h2 className="text-2xl font-bold mb-6">New Client Form</h2>
+                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleFormChange}
+                                className="w-full px-3 py-2 border rounded-lg"
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleFormChange}
+                                className="w-full px-3 py-2 border rounded-lg"
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Company</label>
+                            <input
+                                type="text"
+                                name="company"
+                                value={formData.company}
+                                onChange={handleFormChange}
+                                className="w-full px-3 py-2 border rounded-lg"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Phone</label>
+                            <input
+                                type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleFormChange}
+                                className="w-full px-3 py-2 border rounded-lg"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Address</label>
+                            <textarea
+                                name="address"
+                                value={formData.address}
+                                onChange={handleFormChange}
+                                className="w-full px-3 py-2 border rounded-lg"
+                            ></textarea>
+                        </div>
+                        <button
+                            onClick={() => setScreen('machine')}
+                            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 w-full"
+                            disabled={!formData.name || !formData.email}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
+            );
 
-        // Botón salir
-        exitBtn.addEventListener('click', () => {
-            // Reiniciar aplicación
-            clientForm.reset();
-            machineSelect.value = '';
-            machineSpecs.classList.add('hidden');
-            adviceScreen.classList.add('hidden');
-            mainScreen.classList.remove('hidden');
-            clientData = {};
-        });
+            const renderMachineScreen = () => (
+                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+                    <h2 className="text-2xl font-bold mb-6">Select Machine</h2>
+                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Machine Model</label>
+                            <select
+                                value={selectedMachine}
+                                onChange={handleMachineSelect}
+                                className="w-full px-3 py-2 border rounded-lg"
+                            >
+                                <option value="">Select a machine</option>
+                                {machines.map((machine) => (
+                                    <option key={machine} value={machine}>
+                                        {machine}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        {selectedMachine && machineSpecs[selectedMachine] && (
+                            <div className="mb-4">
+                                <h3 className="text-lg font-semibold">Specifications</h3>
+                                <p>Screw Diameter B: {machineSpecs[selectedMachine].screwDiameterB}</p>
+                                <p>Tie Bar Distance: {machineSpecs[selectedMachine].tieBarDistance}</p>
+                                <p>Injection Weight: {machineSpecs[selectedMachine].injectionWeight}</p>
+                            </div>
+                        )}
+                        <button
+                            onClick={() => setScreen('price')}
+                            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 w-full"
+                            disabled={!selectedMachine}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
+            );
+
+            const renderPriceScreen = () => (
+                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+                    <h2 className="text-2xl font-bold mb-6">Machine Price</h2>
+                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+                        <p className="text-lg">Machine: {selectedMachine}</p>
+                        <p className="text-lg font-semibold">Price: {machinePrices[selectedMachine]}</p>
+                        <button
+                            onClick={() => setScreen('machine')}
+                            className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 w-full mt-4"
+                        >
+                            Back
+                        </button>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div>
+                    {screen === 'main' && renderMainScreen()}
+                    {screen === 'form' && renderFormScreen()}
+                    {screen === 'machine' && renderMachineScreen()}
+                    {screen === 'price' && renderPriceScreen()}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
-
