@@ -1,4 +1,4 @@
-<html lang="en">
+<img src="[URL_DEL_LOGO](https://www.dkm.mx/Uploads/Resource/2017-09-04/59acbd80d943a.png)" alt="DKM - Discover Key of Molding" width="200">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
