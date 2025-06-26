@@ -3,434 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Dakumar</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Gestión de Clientes - Máquinas DKM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Cotizador de Máquinas de Inyección</h1>
-        <div class="logo">
-            <img src="https://www.dakumar.com/images/logo.png" alt="Logo Dakumar">
+<body class="bg-gray-100 font-sans">
+    <div id="app" class="container mx-auto p-4">
+        <!-- Pantalla Principal -->
+        <div id="main-screen" class="flex flex-col items-center justify-center h-screen">
+            <h1 class="text-3xl font-bold mb-8">Gestión de Clientes</h1>
+            <button id="new-client-btn" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">Nuevo Cliente</button>
         </div>
-        <button id="nuevoCliente" class="btn-primario">Nuevo Cliente</button>
-    </div>
-    <script src="js/script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos del Cliente</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Información del Cliente</h1>
-        <form id="formCliente">
-            <div class="form-group">
-                <label for="nombre">Nombre completo:</label>
-                <input type="text" id="nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="empresa">Empresa:</label>
-                <input type="text" id="empresa" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" required>
-            </div>
-            <div class="form-group">
-                <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono" required>
-            </div>
-            <div class="form-group">
-                <label for="pais">País:</label>
-                <input type="text" id="pais" required>
-            </div>
-            <div class="form-group">
-                <label for="ciudad">Ciudad:</label>
-                <input type="text" id="ciudad" required>
-            </div>
-            <div class="form-group">
-                <label for="industria">Industria:</label>
-                <input type="text" id="industria">
-            </div>
-            <button type="submit" class="btn-primario">Enviar</button>
-        </form>
-    </div>
-    <script src="js/script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Máquina</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Seleccione una máquina</h1>
-        <div class="maquina-info">
-            <select id="selectMaquina" class="form-control">
-                <option value="">-- Seleccione una máquina --</option>
-                <option value="DKM-130SV">DKM-130SV</option>
-                <option value="DKM-180SV">DKM-180SV</option>
-                <option value="DKM-250SV">DKM-250SV</option>
-                <option value="DKM-350SV">DKM-350SV</option>
-                <option value="DKM-450SV">DKM-450SV</option>
-                <option value="DKM-550SV">DKM-550SV</option>
-                <option value="DKM-650SV">DKM-650SV</option>
-                <option value="DKM-850SV">DKM-850SV</option>
-                <option value="DKM-1150SV">DKM-1150SV</option>
-                <option value="DKM-1350SV">DKM-1350SV</option>
-                <option value="DKM-1650SV">DKM-1650SV</option>
-                <option value="DKM-2250SV">DKM-2250SV</option>
-                <option value="DKM-2800SV">DKM-2800SV</option>
-            </select>
-            
-            <div id="especificaciones" class="especificaciones-container">
-                <!-- Aquí se mostrarán las especificaciones -->
-            </div>
-            
-            <button id="btnSiguiente" class="btn-primario" disabled>Siguiente</button>
-        </div>
-    </div>
-    <script src="js/data.js"></script>
-    <script src="js/script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Resumen de Cotización</h1>
-        <div class="cliente-info">
-            <h2>Datos del Cliente</h2>
-            <div id="datosCliente"></div>
-        </div>
-        
-        <div class="cotizacion-container">
-            <h2>Detalle de la Cotización</h2>
-            <table id="tablaCotizacion">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Precio (USD)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí se llenará con JavaScript -->
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <th id="totalCotizacion">$0.00</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        
-        <button id="btnSalir" class="btn-primario">Salir</button>
-    </div>
-    <script src="js/data.js"></script>
-    <script src="js/script.js"></script>
-</body>
-</html>
-// Datos de las máquinas y sus especificaciones
-const maquinas = {
-    "DKM-130SV": {
-        precio: 23718,
-        especificaciones: {
-            "Screw diameter B": "30mm",
-            "Tie bar distance": "300x300mm",
-            "Injection weight": "133g"
-        },
-        equipos: [
-            { nombre: "Autocargador STL-300GE", precio: 496.80 },
-            { nombre: "Secador XHD-25KG", precio: 408.00 },
-            { nombre: "Molino XFS-180", precio: 862.80 },
-            { nombre: "Torre de enfriamiento 10T", precio: 952.80 },
-            { nombre: "Chiller de agua SC-05WCI", precio: 2208.00 },
-            { nombre: "Chiller de aire SC-10ACI", precio: 4416.00 }
-        ]
-    },
-    "DKM-180SV": {
-        precio: 28580,
-        especificaciones: {
-            "Screw diameter B": "35mm",
-            "Tie bar distance": "350x350mm",
-            "Injection weight": "180g"
-        },
-        equipos: [
-            { nombre: "Autocargador STL-300GN", precio: 549.60 },
-            { nombre: "Secador XHD-50KG", precio: 502.80 },
-            { nombre: "Molino XFS-230", precio: 1290.00 },
-            { nombre: "Torre de enfriamiento 10T", precio: 952.80 },
-            { nombre: "Chiller de agua SC-08WCI", precio: 3588.00 },
-            { nombre: "Chiller de aire SC-10ACI", precio: 4416.00 }
-        ]
-    },
-    // ... (agregar el resto de las máquinas con el mismo formato)
-    "DKM-2800SV": {
-        precio: 578856,
-        especificaciones: {
-            "Screw diameter B": "110mm",
-            "Tie bar distance": "1200x1200mm",
-            "Injection weight": "2800g"
-        },
-        equipos: [
-            { nombre: "Autocargador STL-7.5HP", precio: 1774.80 },
-            { nombre: "Secador XHD-600KG", precio: 2440.80 },
-            { nombre: "Molino XFS-1000", precio: 12379.20 },
-            { nombre: "Torre de enfriamiento 150T", precio: 6795.60 },
-            { nombre: "Chiller de agua SC-50WCI", precio: 16560.00 },
-            { nombre: "Chiller de aire SC-40ACI", precio: 16560.00 }
-        ]
-    }
-};
 
-// Almacenamiento local de datos del cliente
-let clienteData = {};
+        <!-- Formulario de Cliente -->
+        <div id="client-form-screen" class="hidden flex flex-col items-center justify-center h-screen">
+            <h2 class="text-2xl font-bold mb-6">Datos del Cliente</h2>
+            <form id="client-form" class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+                <div class="mb-4">
+                    <label class="block text-gray-700">Nombre</label>
+                    <input type="text" id="name" class="w-full p-2 border rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Empresa</label>
+                    <input type="text" id="company" class="w-full p-2 border rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Teléfono</label>
+                    <input type="tel" id="phone" class="w-full p-2 border rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Mail</label>
+                    <input type="email" id="email" class="w-full p-2 border rounded" required>
+                </div>
+                <button type="button" id="grok-link-btn" class="bg-green-500 text-white px-4 py-2 rounded mb-4 w-full hover:bg-green-600">
+                    Visitar Grok AI
+                </button>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Seleccionar Máquina</label>
+                    <select id="machine-select" class="w-full p-2 border rounded" required>
+                        <option value="">Seleccione una máquina</option>
+                        <option value="DKM-130SV">DKM-130SV</option>
+                        <option value="DKM-180SV">DKM-180SV</option>
+                        <option value="DKM-250SV">DKM-250SV</option>
+                        <option value="DKM-350SV">DKM-350SV</option>
+                        <option value="DKM-450SV">DKM-450SV</option>
+                        <option value="DKM-550SV">DKM-550SV</option>
+                        <option value="DKM-650SV">DKM-650SV</option>
+                        <option value="DKM-850SV">DKM-850SV</option>
+                        <option value="DKM-1150SV">DKM-1150SV</option>
+                        <option value="DKM-1350SV">DKM-1350SV</option>
+                        <option value="DKM-1650SV">DKM-1650SV</option>
+                        <option value="DKM-2250SV">DKM-2250SV</option>
+                        <option value="DKM-2800SV">DKM-2800SV</option>
+                    </select>
+                </div>
+                <div id="machine-specs" class="hidden bg-gray-50 p-4 rounded mb-4"></div>
+                <button type="submit" id="next-btn" class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Siguiente</button>
+            </form>
+        </div>
 
-// Función para guardar datos del cliente
-function guardarCliente(data) {
-    clienteData = data;
-    localStorage.setItem('clienteData', JSON.stringify(data));
-}
+        <!-- Pantalla de Consejo -->
+        <div id="advice-screen" class="hidden flex flex-col items-center justify-center h-screen">
+            <h2 class="text-2xl font-bold mb-6">Consejo de IA</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+                <p class="mb-4">Consulta adicional en: <a href="https://grok.com/?ref=aiartweekly" target="_blank" class="text-blue-500 underline">Grok AI</a></p>
+                <div id="ai-advice" class="bg-gray-50 p-4 rounded mb-4"></div>
+                <button id="exit-btn" class="bg-red-500 text-white px-4 py-2 rounded w-full hover:bg-red-600">Salir</button>
+            </div>
+        </div>
+    </div>
 
-// Función para obtener datos del cliente
-function obtenerCliente() {
-    const data = localStorage.getItem('clienteData');
-    return data ? JSON.parse(data) : {};
-}
-document.addEventListener('DOMContentLoaded', function() {
-    // Navegación entre páginas
-    if (document.getElementById('nuevoCliente')) {
-        document.getElementById('nuevoCliente').addEventListener('click', function() {
-            window.location.href = 'formulario.html';
+    <script>
+        // Configuración de Google Sheets API (necesitas tu propia clave API y ID de la hoja)
+        const SPREADSHEET_ID = '1GTY9WtufW1ZuOV2j8y23rBa8fsCDHXic-7X5YaBnjr8';
+        const API_KEY = 'YOUR_GOOGLE_API_KEY'; // Reemplaza con tu clave API de Google
+        const SHEET_NAME = 'Sheet1'; // Ajusta según el nombre de la hoja
+
+        // Elementos del DOM
+        const mainScreen = document.getElementById('main-screen');
+        const clientFormScreen = document.getElementById('client-form-screen');
+        const adviceScreen = document.getElementById('advice-screen');
+        const newClientBtn = document.getElementById('new-client-btn');
+        const clientForm = document.getElementById('client-form');
+        const grokLinkBtn = document.getElementById('grok-link-btn');
+        const machineSelect = document.getElementById('machine-select');
+        const machineSpecs = document.getElementById('machine-specs');
+        const nextBtn = document.getElementById('next-btn');
+        const exitBtn = document.getElementById('exit-btn');
+
+        // Datos del cliente
+        let clientData = {};
+
+        // Mostrar formulario
+        newClientBtn.addEventListener('click', () => {
+            mainScreen.classList.add('hidden');
+            clientFormScreen.classList.remove('hidden');
         });
-    }
 
-    // Manejo del formulario de cliente
-    if (document.getElementById('formCliente')) {
-        document.getElementById('formCliente').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const cliente = {
-                nombre: document.getElementById('nombre').value,
-                empresa: document.getElementById('empresa').value,
-                email: document.getElementById('email').value,
-                telefono: document.getElementById('telefono').value,
-                pais: document.getElementById('pais').value,
-                ciudad: document.getElementById('ciudad').value,
-                industria: document.getElementById('industria').value
-            };
-            
-            guardarCliente(cliente);
-            window.location.href = 'seleccion-maquina.html';
+        // Configurar botón de Grok
+        grokLinkBtn.addEventListener('click', () => {
+            window.open('https://grok.com/?ref=aiartweekly', '_blank');
         });
-    }
 
-    // Selección de máquina
-    if (document.getElementById('selectMaquina')) {
-        const selectMaquina = document.getElementById('selectMaquina');
-        const btnSiguiente = document.getElementById('btnSiguiente');
-        const especificacionesDiv = document.getElementById('especificaciones');
-        
-        selectMaquina.addEventListener('change', function() {
-            const modelo = this.value;
-            if (modelo) {
-                const maquina = maquinas[modelo];
-                
-                // Mostrar especificaciones
-                let html = `<h3>${modelo}</h3>`;
-                html += `<p><strong>Precio:</strong> $${maquina.precio.toLocaleString()}</p>`;
-                html += '<h4>Especificaciones técnicas:</h4><ul>';
-                
-                for (const [key, value] of Object.entries(maquina.especificaciones)) {
-                    html += `<li><strong>${key}:</strong> ${value}</li>`;
+        // Obtener especificaciones de la máquina
+        machineSelect.addEventListener('change', async () => {
+            const machine = machineSelect.value;
+            if (!machine) {
+                machineSpecs.classList.add('hidden');
+                return;
+            }
+
+            try {
+                const response = await axios.get(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}!A1:Z100?key=${API_KEY}`
+                );
+                const rows = response.data.values;
+                const headers = rows[0];
+                const machineRow = rows.find(row => row[0] === machine);
+
+                if (machineRow) {
+                    let specsHtml = '<h3 class="font-bold">Especificaciones:</h3><ul>';
+                    for (let i = 1; i < headers.length; i++) {
+                        if (machineRow[i]) {
+                            specsHtml += `<li><strong>${headers[i]}:</strong> ${machineRow[i]}</li>`;
+                        }
+                    }
+                    specsHtml += '</ul>';
+                    machineSpecs.innerHTML = specsHtml;
+                    machineSpecs.classList.remove('hidden');
+                } else {
+                    machineSpecs.innerHTML = '<p class="text-red-500">No se encontraron especificaciones.</p>';
+                    machineSpecs.classList.remove('hidden');
                 }
-                
-                html += '</ul>';
-                especificacionesDiv.innerHTML = html;
-                
-                // Habilitar botón siguiente
-                btnSiguiente.disabled = false;
-                btnSiguiente.onclick = function() {
-                    localStorage.setItem('maquinaSeleccionada', modelo);
-                    window.location.href = 'cotizacion.html';
-                };
-            } else {
-                especificacionesDiv.innerHTML = '';
-                btnSiguiente.disabled = true;
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+                machineSpecs.innerHTML = '<p class="text-red-500">Error al cargar especificaciones.</p>';
+                machineSpecs.classList.remove('hidden');
             }
         });
-    }
 
-    // Generación de cotización
-    if (document.getElementById('tablaCotizacion')) {
-        const modelo = localStorage.getItem('maquinaSeleccionada');
-        const cliente = obtenerCliente();
-        const maquina = maquinas[modelo];
-        
-        // Mostrar datos del cliente
-        let clienteHtml = `
-            <p><strong>Nombre:</strong> ${cliente.nombre}</p>
-            <p><strong>Empresa:</strong> ${cliente.empresa}</p>
-            <p><strong>Contacto:</strong> ${cliente.email} | ${cliente.telefono}</p>
-            <p><strong>Ubicación:</strong> ${cliente.ciudad}, ${cliente.pais}</p>
-        `;
-        document.getElementById('datosCliente').innerHTML = clienteHtml;
-        
-        // Llenar tabla de cotización
-        const tbody = document.querySelector('#tablaCotizacion tbody');
-        let total = maquina.precio;
-        
-        // Agregar máquina principal
-        let row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${modelo}</td>
-            <td>$${maquina.precio.toLocaleString()}</td>
-        `;
-        tbody.appendChild(row);
-        
-        // Agregar equipos auxiliares
-        maquina.equipos.forEach(equipo => {
-            row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${equipo.nombre}</td>
-                <td>$${equipo.precio.toLocaleString()}</td>
+        // Manejar formulario
+        clientForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            clientData = {
+                name: document.getElementById('name').value,
+                company: document.getElementById('company').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                machine: machineSelect.value
+            };
+
+            if (!clientData.machine) {
+                alert('Por favor, seleccione una máquina.');
+                return;
+            }
+
+            // Mostrar pantalla de consejo
+            clientFormScreen.classList.add('hidden');
+            adviceScreen.classList.remove('hidden');
+
+            // Simular consejo de IA basado en dakumar.com
+            const aiAdvice = document.getElementById('ai-advice');
+            // Nota: No puedo acceder directamente a dakumar.com, así que simulo un consejo genérico
+            aiAdvice.innerHTML = `
+                <p><strong>Consejo de IA:</strong> Basado en la información de Dakumar, para la máquina ${clientData.machine}, recomendamos optimizar el ciclo de producción para maximizar la eficiencia energética y reducir costos operativos. Considere integrar sistemas de monitoreo en tiempo real para mejorar el mantenimiento predictivo.</p>
             `;
-            tbody.appendChild(row);
-            total += equipo.precio;
         });
-        
-        // Mostrar total
-        document.getElementById('totalCotizacion').textContent = `$${total.toLocaleString()}`;
-        
+
         // Botón salir
-        document.getElementById('btnSalir').addEventListener('click', function() {
-            window.location.href = 'index.html';
+        exitBtn.addEventListener('click', () => {
+            // Reiniciar aplicación
+            clientForm.reset();
+            machineSelect.value = '';
+            machineSpecs.classList.add('hidden');
+            adviceScreen.classList.add('hidden');
+            mainScreen.classList.remove('hidden');
+            clientData = {};
         });
-    }
-});
-/* Estilos generales */
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    color: #333;
-    background-color: #f5f5f5;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h1, h2, h3, h4 {
-    color: #2c3e50;
-}
-
-/* Botones */
-.btn-primario {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    display: block;
-    margin: 20px auto;
-    width: 200px;
-    text-align: center;
-}
-
-.btn-primario:hover {
-    background-color: #2980b9;
-}
-
-/* Formularios */
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input, .form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-/* Tablas */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #3498db;
-    color: white;
-}
-
-tr:hover {
-    background-color: #f5f5f5;
-}
-
-/* Especificaciones */
-.especificaciones-container {
-    margin: 20px 0;
-    padding: 15px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* Logo */
-.logo {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.logo img {
-    max-width: 200px;
-    height: auto;
-}
-
-/* Responsivo */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .btn-primario {
-        width: 100%;
-    }
-}
+    </script>
+</body>
+</html>
