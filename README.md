@@ -3,205 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client and Machine Selection App</title>
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6/babel.min.js"></script>
+    <title>DKM Machine Selector</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body>
-    <div id="root"></div>
-    <script type="text/babel">
-        const machines = [
-            'DKM-130SV', 'DKM-180SV', 'DKM-250SV', 'DKM-350SV', 'DKM-450SV',
-            'DKM-550SV', 'DKM-650SV', 'DKM-850SV', 'DKM-1150SV', 'DKM-1350SV',
-            'DKM-1650SV', 'DKM-2250SV', 'DKM-2800SV'
-        ];
+<body class="bg-gray-100 font-sans">
+    <div id="app" class="container mx-auto p-4">
+        <!-- First Screen: Machine Selection -->
+        <div id="machine-selection" class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-2xl font-bold mb-4">Select a DKM Machine</h1>
+            <select id="machine-select" class="w-full p-2 border rounded mb-4">
+                <option value="">Select a machine</option>
+                <option value="DKM-130SV">DKM-130SV</option>
+                <option value="DKM-180SV">DKM-180SV</option>
+                <option value="DKM-250SV">DKM-250SV</option>
+                <option value="DKM-350SV">DKM-350SV</option>
+                <option value="DKM-450SV">DKM-450SV</option>
+                <option value="DKM-550SV">DKM-550SV</option>
+                <option value="DKM-650SV">DKM-650SV</option>
+                <option value="DKM-850SV">DKM-850SV</option>
+                <option value="DKM-1150SV">DKM-1150SV</option>
+                <option value="DKM-1350SV">DKM-1350SV</option>
+                <option value="DKM-1650SV">DKM-1650SV</option>
+                <option value="DKM-2250SV">DKM-2250SV</option>
+                <option value="DKM-2800SV">DKM-2800SV</option>
+            </select>
+            <div id="machine-specs" class="mt-4 hidden">
+                <h2 class="text-xl font-semibold">Machine Specifications</h2>
+                <p id="screw-diameter" class="mb-2"></p>
+                <p id="tie-bar-distance" class="mb-2"></p>
+                <p id="injection-weight" class="mb-2"></p>
+                <button id="next-btn" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Next</button>
+            </div>
+        </div>
 
-        // Simulated machine specs (replace with actual data from dakumar.com)
-        const machineSpecs = {
-            'DKM-130SV': { screwDiameterB: '32 mm', tieBarDistance: '360 x 360 mm', injectionWeight: '100 g' },
-            'DKM-180SV': { screwDiameterB: '36 mm', tieBarDistance: '410 x 410 mm', injectionWeight: '150 g' },
-            'DKM-250SV': { screwDiameterB: '40 mm', tieBarDistance: '460 x 460 mm', injectionWeight: '200 g' },
-            'DKM-350SV': { screwDiameterB: '45 mm', tieBarDistance: '510 x 510 mm', injectionWeight: '300 g' },
-            'DKM-450SV': { screwDiameterB: '50 mm', tieBarDistance: '560 x 560 mm', injectionWeight: '400 g' },
-            'DKM-550SV': { screwDiameterB: '55 mm', tieBarDistance: '610 x 610 mm', injectionWeight: '500 g' },
-            'DKM-650SV': { screwDiameterB: '60 mm', tieBarDistance: '660 x 660 mm', injectionWeight: '600 g' },
-            'DKM-850SV': { screwDiameterB: '65 mm', tieBarDistance: '710 x 710 mm', injectionWeight: '800 g' },
-            'DKM-1150SV': { screwDiameterB: '70 mm', tieBarDistance: '760 x 760 mm', injectionWeight: '1000 g' },
-            'DKM-1350SV': { screwDiameterB: '75 mm', tieBarDistance: '810 x 810 mm', injectionWeight: '1200 g' },
-            'DKM-1650SV': { screwDiameterB: '80 mm', tieBarDistance: '860 x 860 mm', injectionWeight: '1500 g' },
-            'DKM-2250SV': { screwDiameterB: '85 mm', tieBarDistance: '910 x 910 mm', injectionWeight: '2000 g' },
-            'DKM-2800SV': { screwDiameterB: '90 mm', tieBarDistance: '960 x 960 mm', injectionWeight: '2500 g' }
+        <!-- Second Screen: Pricing Information -->
+        <div id="pricing-info" class="bg-white rounded-lg shadow-lg p-6 hidden">
+            <h1 class="text-2xl font-bold mb-4">Pricing Information</h1>
+            <table class="w-full border-collapse mb-4">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">Item</th>
+                        <th class="border p-2">Price</th>
+                    </tr>
+                </thead>
+                <tbody id="pricing-table"></tbody>
+                <tfoot>
+                    <tr class="font-bold">
+                        <td class="border p-2">Total</td>
+                        <td id="total-price" class="border p-2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="flex space-x-4">
+                <button id="exit-btn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Exit</button>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSd3rHnJlEC94iOAyeMJvPprfWpdtXDUNoMAzXXyPMwsKp9wJQ/viewform?usp=dialog" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Customer Data</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Machine data with specifications and pricing
+        const machineData = {
+            "DKM-130SV": {
+                specs: { screwDiameter: "36 mm", tieBarDistance: "410 x 410 mm", injectionWeight: "183 g" },
+                price: 23718,
+                auxiliaries: [
+                    { name: "Autocargador STL-300GE", price: 496.80 },
+                    { name: "Secador XHD-25KG", price: 408.00 },
+                    { name: "Molino XFS-180", price: 862.80 },
+                    { name: "Torre de enfriamiento 10T", price: 952.80 },
+                    { name: "Chiller de agua SC-05WCI", price: 2208.00 },
+                    { name: "Chiller de aire SC-10ACI", price: 4416.00 }
+                ]
+            },
+            "DKM-180SV": {
+                specs: { screwDiameter: "40 mm", tieBarDistance: "460 x 460 mm", injectionWeight: "286 g" },
+                price: 28580,
+                auxiliaries: [
+                    { name: "Autocargador STL-300GN", price: 549.60 },
+                    { name: "Secador XHD-50KG", price: 502.80 },
+                    { name: "Molino XFS-230", price: 1290.00 },
+                    { name: "Torre de enfriamiento 10T", price: 952.80 },
+                    { name: "Chiller de agua SC-08WCI", price: 3588.00 },
+                    { name: "Chiller de aire SC-10ACI", price: 4416.00 }
+                ]
+            },
+            "DKM-250SV": {
+                specs: { screwDiameter: "45 mm", tieBarDistance: "530 x 530 mm", injectionWeight: "405 g" },
+                price: 36770,
+                auxiliaries: [
+                    { name: "Autocargador STL-450GE", price: 697.20 },
+                    { name: "Secador XHD-50KG", price: 502.80 },
+                    { name: "Molino XFS-400", price: 2151.60 },
+                    { name: "Torre de enfriamiento 15T", price: 1083.60 },
+                    { name: "Chiller de agua SC-10WCI", price: 3864.00 },
+                    { name: "Chiller de aire SC-12ACI", price: 4968.00 }
+                ]
+            },
+            "DKM-350SV": {
+                specs: { screwDiameter: "50 mm", tieBarDistance: "610 x 610 mm", injectionWeight: "623 g" },
+                price: 51388,
+                auxiliaries: [
+                    { name: "Autocargador STL-450GE", price: 697.20 },
+                    { name: "Secador XHD-75KG", price: 594.00 },
+                    { name: "Molino XFS-500", price: 2979.60 },
+                    { name: "Torre de enfriamiento 20T", price: 1299.60 },
+                    { name: "Chiller de agua SC-12WCI", price: 4416.00 },
+                    { name: "Chiller de aire SC-15ACI", price: 6348.00 }
+                ]
+            },
+            "DKM-450SV": {
+                specs: { screwDiameter: "55 mm", tieBarDistance: "680 x 680 mm", injectionWeight: "893 g" },
+                price: 67210,
+                auxiliaries: [
+                    { name: "Autocargador STL-600GN", price: 818.40 },
+                    { name: "Secador XHD-100KG", price: 788.40 },
+                    { name: "Molino XFS-600", price: 4864.80 },
+                    { name: "Torre de enfriamiento 30T", price: 2335.20 },
+                    { name: "Chiller de agua SC-15WCI", price: 4968.00 },
+                    { name: "Chiller de aire SC-15ACI", price: 6348.00 }
+                ]
+            },
+            "DKM-550SV": {
+                specs: { screwDiameter: "60 mm", tieBarDistance: "730 x 730 mm", injectionWeight: "1134 g" },
+                price: 80114,
+                auxiliaries: [
+                    { name: "Autocargador STL-600GN", price: 818.40 },
+                    { name: "Secador XHD-150KG", price: 948.00 },
+                    { name: "Molino XFS-600", price: 4864.80 },
+                    { name: "Torre de enfriamiento 30T", price: 2335.20 },
+                    { name: "Chiller de agua SC-20WCI", price: 4968.00 },
+                    { name: "Chiller de aire SC-20ACI", price: 8004.00 }
+                ]
+            },
+            "DKM-650SV": {
+                specs: { screwDiameter: "65 mm", tieBarDistance: "810 x 810 mm", injectionWeight: "1466 g" },
+                price: 107884,
+                auxiliaries: [
+                    { name: "Autocargador STL-800GN", price: 1035.60 },
+                    { name: "Secador XHD-200KG", price: 1267.20 },
+                    { name: "Molino XFS-800", price: 8766.00 },
+                    { name: "Torre de enfriamiento 40T", price: 2463.60 },
+                    { name: "Chiller de agua SC-25WCI", price: 8004.00 },
+                    { name: "Chiller de aire SC-20ACI", price: 8004.00 }
+                ]
+            },
+            "DKM-850SV": {
+                specs: { screwDiameter: "70 mm", tieBarDistance: "910 x 910 mm", injectionWeight: "1882 g" },
+                price: 128760,
+                auxiliaries: [
+                    { name: "Autocargador STL-800GN", price: 1035.60 },
+                    { name: "Secador XHD-250KG", price: 1479.60 },
+                    { name: "Molino XFS-800", price: 8766.00 },
+                    { name: "Torre de enfriamiento 60T", price: 3110.40 },
+                    { name: "Chiller de agua SC-25WCI", price: 8004.00 },
+                    { name: "Chiller de aire SC-25ACI", price: 10350.00 }
+                ]
+            },
+            "DKM-1150SV": {
+                specs: { screwDiameter: "80 mm", tieBarDistance: "1010 x 1010 mm", injectionWeight: "2605 g" },
+                price: 178824,
+                auxiliaries: [
+                    { name: "Autocargador STL-3.5HP", price: 1345.20 },
+                    { name: "Secador XHD-250KG", price: 1479.60 },
+                    { name: "Molino XFS-1000", price: 12379.20 },
+                    { name: "Torre de enfriamiento 80T", price: 3814.80 },
+                    { name: "Chiller de agua SC-30WCI", price: 9660.00 },
+                    { name: "Chiller de aire SC-30ACI", price: 12420.00 }
+                ]
+            },
+            "DKM-1350SV": {
+                specs: { screwDiameter: "85 mm", tieBarDistance: "1080 x 1080 mm", injectionWeight: "3056 g" },
+                price: 219500,
+                auxiliaries: [
+                    { name: "Autocargador STL-5HP", price: 1502.40 },
+                    { name: "Secador XHD-250KG", price: 1479.60 },
+                    { name: "Molino XFS-1000", price: 12379.20 },
+                    { name: "Torre de enfriamiento 100T", price: 4508.40 },
+                    { name: "Chiller de agua SC-30WCI", price: 9660.00 },
+                    { name: "Chiller de aire SC-30ACI", price: 12420.00 }
+                ]
+            },
+            "DKM-1650SV": {
+                specs: { screwDiameter: "90 mm", tieBarDistance: "1160 x 1160 mm", injectionWeight: "3665 g" },
+                price: 283300,
+                auxiliaries: [
+                    { name: "Autocargador STL-5HP", price: 1502.40 },
+                    { name: "Secador XHD-300KG", price: 1666.80 },
+                    { name: "Molino XFS-1000", price: 12379.20 },
+                    { name: "Torre de enfriamiento 125T", price: 5319.60 },
+                    { name: "Chiller de agua SC-30WCI", price: 9660.00 },
+                    { name: "Chiller de aire SC-30ACI", price: 12420.00 }
+                ]
+            },
+            "DKM-2250SV": {
+                specs: { screwDiameter: "100 mm", tieBarDistance: "1260 x 1260 mm", injectionWeight: "4717 g" },
+                price: 417860,
+                auxiliaries: [
+                    { name: "Autocargador STL-7.5HP", price: 1774.80 },
+                    { name: "Secador XHD-400KG", price: 1944.00 },
+                    { name: "Molino XFS-1000", price: 12379.20 },
+                    { name: "Torre de enfriamiento 150T", price: 6795.60 },
+                    { name: "Chiller de agua SC-40WCI", price: 13524.00 },
+                    { name: "Chiller de aire SC-40ACI", price: 16560.00 }
+                ]
+            },
+            "DKM-2800SV": {
+                specs: { screwDiameter: "110 mm", tieBarDistance: "1360 x 1360 mm", injectionWeight: "5896 g" },
+                price: 578856,
+                auxiliaries: [
+                    { name: "Autocargador STL-7.5HP", price: 1774.80 },
+                    { name: "Secador XHD-600KG", price: 2440.80 },
+                    { name: "Molino XFS-1000", price: 12379.20 },
+                    { name: "Torre de enfriamiento 150T", price: 6795.60 },
+                    { name: "Chiller de agua SC-50WCI", price: 16560.00 },
+                    { name: "Chiller de aire SC-40ACI", price: 16560.00 }
+                ]
+            }
         };
 
-        // Simulated pricing data (replace with actual data from Google Sheet)
-        const machinePrices = {
-            'DKM-130SV': '$50,000', 'DKM-180SV': '$60,000', 'DKM-250SV': '$70,000',
-            'DKM-350SV': '$80,000', 'DKM-450SV': '$90,000', 'DKM-550SV': '$100,000',
-            'DKM-650SV': '$110,000', 'DKM-850SV': '$120,000', 'DKM-1150SV': '$130,000',
-            'DKM-1350SV': '$140,000', 'DKM-1650SV': '$150,000', 'DKM-2250SV': '$160,000',
-            'DKM-2800SV': '$170,000'
-        };
+        // DOM elements
+        const machineSelect = document.getElementById('machine-select');
+        const machineSpecsDiv = document.getElementById('machine-specs');
+        const screwDiameter = document.getElementById('screw-diameter');
+        const tieBarDistance = document.getElementById('tie-bar-distance');
+        const injectionWeight = document.getElementById('injection-weight');
+        const nextBtn = document.getElementById('next-btn');
+        const pricingInfoDiv = document.getElementById('pricing-info');
+        const pricingTable = document.getElementById('pricing-table');
+        const totalPrice = document.getElementById('total-price');
+        const exitBtn = document.getElementById('exit-btn');
+        const machineSelectionDiv = document.getElementById('machine-selection');
 
-        function App() {
-            const [screen, setScreen] = React.useState('main');
-            const [formData, setFormData] = React.useState({
-                name: '', email: '', company: '', phone: '', address: ''
-            });
-            const [selectedMachine, setSelectedMachine] = React.useState('');
+        // Event listener for machine selection
+        machineSelect.addEventListener('change', (e) => {
+            const selectedMachine = e.target.value;
+            if (selectedMachine && machineData[selectedMachine]) {
+                const specs = machineData[selectedMachine].specs;
+                screwDiameter.textContent = `Screw Diameter B: ${specs.screwDiameter}`;
+                tieBarDistance.textContent = `Tie Bar Distance: ${specs.tieBarDistance}`;
+                injectionWeight.textContent = `Injection Weight: ${specs.injectionWeight}`;
+                machineSpecsDiv.classList.remove('hidden');
+            } else {
+                machineSpecsDiv.classList.add('hidden');
+            }
+        });
 
-            const handleFormChange = (e) => {
-                setFormData({ ...formData, [e.target.name]: e.target.value });
-            };
+        // Event listener for Next button
+        nextBtn.addEventListener('click', () => {
+            const selectedMachine = machineSelect.value;
+            if (selectedMachine && machineData[selectedMachine]) {
+                machineSelectionDiv.classList.add('hidden');
+                pricingInfoDiv.classList.remove('hidden');
 
-            const handleMachineSelect = (e) => {
-                setSelectedMachine(e.target.value);
-            };
+                // Populate pricing table
+                const data = machineData[selectedMachine];
+                let total = data.price;
+                pricingTable.innerHTML = '';
 
-            const renderMainScreen = () => (
-                <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-                    <h1 className="text-3xl font-bold mb-8">Client Management</h1>
-                    <button
-                        onClick={() => setScreen('form')}
-                        className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
-                    >
-                        New Client
-                    </button>
-                </div>
-            );
+                // Add machine row
+                const machineRow = document.createElement('tr');
+                machineRow.innerHTML = `
+                    <td class="border p-2">${selectedMachine}</td>
+                    <td class="border p-2">$${data.price.toFixed(2)}</td>
+                `;
+                pricingTable.appendChild(machineRow);
 
-            const renderFormScreen = () => (
-                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
-                    <h2 className="text-2xl font-bold mb-6">New Client Form</h2>
-                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Name</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Company</label>
-                            <input
-                                type="text"
-                                name="company"
-                                value={formData.company}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Phone</label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Address</label>
-                            <textarea
-                                name="address"
-                                value={formData.address}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            ></textarea>
-                        </div>
-                        <button
-                            onClick={() => setScreen('machine')}
-                            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 w-full"
-                            disabled={!formData.name || !formData.email}
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-            );
+                // Add auxiliary equipment rows (sorted descending by name)
+                const sortedAuxiliaries = data.auxiliaries.sort((a, b) => b.name.localeCompare(a.name));
+                sortedAuxiliaries.forEach(aux => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="border p-2">${aux.name}</td>
+                        <td class="border p-2">$${aux.price.toFixed(2)}</td>
+                    `;
+                    pricingTable.appendChild(row);
+                    total += aux.price;
+                });
 
-            const renderMachineScreen = () => (
-                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
-                    <h2 className="text-2xl font-bold mb-6">Select Machine</h2>
-                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Machine Model</label>
-                            <select
-                                value={selectedMachine}
-                                onChange={handleMachineSelect}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            >
-                                <option value="">Select a machine</option>
-                                {machines.map((machine) => (
-                                    <option key={machine} value={machine}>
-                                        {machine}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        {selectedMachine && machineSpecs[selectedMachine] && (
-                            <div className="mb-4">
-                                <h3 className="text-lg font-semibold">Specifications</h3>
-                                <p>Screw Diameter B: {machineSpecs[selectedMachine].screwDiameterB}</p>
-                                <p>Tie Bar Distance: {machineSpecs[selectedMachine].tieBarDistance}</p>
-                                <p>Injection Weight: {machineSpecs[selectedMachine].injectionWeight}</p>
-                            </div>
-                        )}
-                        <button
-                            onClick={() => setScreen('price')}
-                            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 w-full"
-                            disabled={!selectedMachine}
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-            );
+                // Update total price
+                totalPrice.textContent = `$${total.toFixed(2)}`;
+            }
+        });
 
-            const renderPriceScreen = () => (
-                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
-                    <h2 className="text-2xl font-bold mb-6">Machine Price</h2>
-                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                        <p className="text-lg">Machine: {selectedMachine}</p>
-                        <p className="text-lg font-semibold">Price: {machinePrices[selectedMachine]}</p>
-                        <button
-                            onClick={() => setScreen('machine')}
-                            className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 w-full mt-4"
-                        >
-                            Back
-                        </button>
-                    </div>
-                </div>
-            );
-
-            return (
-                <div>
-                    {screen === 'main' && renderMainScreen()}
-                    {screen === 'form' && renderFormScreen()}
-                    {screen === 'machine' && renderMachineScreen()}
-                    {screen === 'price' && renderPriceScreen()}
-                </div>
-            );
-        }
-
-        ReactDOM.render(<App />, document.getElementById('root'));
+        // Event listener for Exit button
+        exitBtn.addEventListener('click', () => {
+            window.location.reload();
+        });
     </script>
 </body>
 </html>
