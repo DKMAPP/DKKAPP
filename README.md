@@ -1,207 +1,436 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client and Machine Selection App</title>
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Cotizador Dakumar</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel">
-        const machines = [
-            'DKM-130SV', 'DKM-180SV', 'DKM-250SV', 'DKM-350SV', 'DKM-450SV',
-            'DKM-550SV', 'DKM-650SV', 'DKM-850SV', 'DKM-1150SV', 'DKM-1350SV',
-            'DKM-1650SV', 'DKM-2250SV', 'DKM-2800SV'
-        ];
-
-        // Simulated machine specs (replace with actual data from dakumar.com)
-        const machineSpecs = {
-            'DKM-130SV': { screwDiameterB: '32 mm', tieBarDistance: '360 x 360 mm', injectionWeight: '100 g' },
-            'DKM-180SV': { screwDiameterB: '36 mm', tieBarDistance: '410 x 410 mm', injectionWeight: '150 g' },
-            'DKM-250SV': { screwDiameterB: '40 mm', tieBarDistance: '460 x 460 mm', injectionWeight: '200 g' },
-            'DKM-350SV': { screwDiameterB: '45 mm', tieBarDistance: '510 x 510 mm', injectionWeight: '300 g' },
-            'DKM-450SV': { screwDiameterB: '50 mm', tieBarDistance: '560 x 560 mm', injectionWeight: '400 g' },
-            'DKM-550SV': { screwDiameterB: '55 mm', tieBarDistance: '610 x 610 mm', injectionWeight: '500 g' },
-            'DKM-650SV': { screwDiameterB: '60 mm', tieBarDistance: '660 x 660 mm', injectionWeight: '600 g' },
-            'DKM-850SV': { screwDiameterB: '65 mm', tieBarDistance: '710 x 710 mm', injectionWeight: '800 g' },
-            'DKM-1150SV': { screwDiameterB: '70 mm', tieBarDistance: '760 x 760 mm', injectionWeight: '1000 g' },
-            'DKM-1350SV': { screwDiameterB: '75 mm', tieBarDistance: '810 x 810 mm', injectionWeight: '1200 g' },
-            'DKM-1650SV': { screwDiameterB: '80 mm', tieBarDistance: '860 x 860 mm', injectionWeight: '1500 g' },
-            'DKM-2250SV': { screwDiameterB: '85 mm', tieBarDistance: '910 x 910 mm', injectionWeight: '2000 g' },
-            'DKM-2800SV': { screwDiameterB: '90 mm', tieBarDistance: '960 x 960 mm', injectionWeight: '2500 g' }
-        };
-
-        // Simulated pricing data (replace with actual data from Google Sheet)
-        const machinePrices = {
-            'DKM-130SV': '$50,000', 'DKM-180SV': '$60,000', 'DKM-250SV': '$70,000',
-            'DKM-350SV': '$80,000', 'DKM-450SV': '$90,000', 'DKM-550SV': '$100,000',
-            'DKM-650SV': '$110,000', 'DKM-850SV': '$120,000', 'DKM-1150SV': '$130,000',
-            'DKM-1350SV': '$140,000', 'DKM-1650SV': '$150,000', 'DKM-2250SV': '$160,000',
-            'DKM-2800SV': '$170,000'
-        };
-
-        function App() {
-            const [screen, setScreen] = React.useState('main');
-            const [formData, setFormData] = React.useState({
-                name: '', email: '', company: '', phone: '', address: ''
-            });
-            const [selectedMachine, setSelectedMachine] = React.useState('');
-
-            const handleFormChange = (e) => {
-                setFormData({ ...formData, [e.target.name]: e.target.value });
-            };
-
-            const handleMachineSelect = (e) => {
-                setSelectedMachine(e.target.value);
-            };
-
-            const renderMainScreen = () => (
-                <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-                    <h1 className="text-3xl font-bold mb-8">Client Management</h1>
-                    <button
-                        onClick={() => setScreen('form')}
-                        className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
-                    >
-                        New Client
-                    </button>
-                </div>
-            );
-
-            const renderFormScreen = () => (
-                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
-                    <h2 className="text-2xl font-bold mb-6">New Client Form</h2>
-                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Name</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Company</label>
-                            <input
-                                type="text"
-                                name="company"
-                                value={formData.company}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Phone</label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Address</label>
-                            <textarea
-                                name="address"
-                                value={formData.address}
-                                onChange={handleFormChange}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            ></textarea>
-                        </div>
-                        <button
-                            onClick={() => setScreen('machine')}
-                            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 w-full"
-                            disabled={!formData.name || !formData.email}
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-            );
-
-            const renderMachineScreen = () => (
-                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
-                    <h2 className="text-2xl font-bold mb-6">Select Machine</h2>
-                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Machine Model</label>
-                            <select
-                                value={selectedMachine}
-                                onChange={handleMachineSelect}
-                                className="w-full px-3 py-2 border rounded-lg"
-                            >
-                                <option value="">Select a machine</option>
-                                {machines.map((machine) => (
-                                    <option key={machine} value={machine}>
-                                        {machine}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        {selectedMachine && machineSpecs[selectedMachine] && (
-                            <div className="mb-4">
-                                <h3 className="text-lg font-semibold">Specifications</h3>
-                                <p>Screw Diameter B: {machineSpecs[selectedMachine].screwDiameterB}</p>
-                                <p>Tie Bar Distance: {machineSpecs[selectedMachine].tieBarDistance}</p>
-                                <p>Injection Weight: {machineSpecs[selectedMachine].injectionWeight}</p>
-                            </div>
-                        )}
-                        <button
-                            onClick={() => setScreen('price')}
-                            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 w-full"
-                            disabled={!selectedMachine}
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-            );
-
-            const renderPriceScreen = () => (
-                <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
-                    <h2 className="text-2xl font-bold mb-6">Machine Price</h2>
-                    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                        <p className="text-lg">Machine: {selectedMachine}</p>
-                        <p className="text-lg font-semibold">Price: {machinePrices[selectedMachine]}</p>
-                        <button
-                            onClick={() => setScreen('machine')}
-                            className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 w-full mt-4"
-                        >
-                            Back
-                        </button>
-                    </div>
-                </div>
-            );
-
-            return (
-                <div>
-                    {screen === 'main' && renderMainScreen()}
-                    {screen === 'form' && renderFormScreen()}
-                    {screen === 'machine' && renderMachineScreen()}
-                    {screen === 'price' && renderPriceScreen()}
-                </div>
-            );
-        }
-
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
+    <div class="container">
+        <h1>Cotizador de Máquinas de Inyección</h1>
+        <div class="logo">
+            <img src="https://www.dakumar.com/images/logo.png" alt="Logo Dakumar">
+        </div>
+        <button id="nuevoCliente" class="btn-primario">Nuevo Cliente</button>
+    </div>
+    <script src="js/script.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos del Cliente</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Información del Cliente</h1>
+        <form id="formCliente">
+            <div class="form-group">
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="empresa">Empresa:</label>
+                <input type="text" id="empresa" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" required>
+            </div>
+            <div class="form-group">
+                <label for="pais">País:</label>
+                <input type="text" id="pais" required>
+            </div>
+            <div class="form-group">
+                <label for="ciudad">Ciudad:</label>
+                <input type="text" id="ciudad" required>
+            </div>
+            <div class="form-group">
+                <label for="industria">Industria:</label>
+                <input type="text" id="industria">
+            </div>
+            <button type="submit" class="btn-primario">Enviar</button>
+        </form>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Máquina</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Seleccione una máquina</h1>
+        <div class="maquina-info">
+            <select id="selectMaquina" class="form-control">
+                <option value="">-- Seleccione una máquina --</option>
+                <option value="DKM-130SV">DKM-130SV</option>
+                <option value="DKM-180SV">DKM-180SV</option>
+                <option value="DKM-250SV">DKM-250SV</option>
+                <option value="DKM-350SV">DKM-350SV</option>
+                <option value="DKM-450SV">DKM-450SV</option>
+                <option value="DKM-550SV">DKM-550SV</option>
+                <option value="DKM-650SV">DKM-650SV</option>
+                <option value="DKM-850SV">DKM-850SV</option>
+                <option value="DKM-1150SV">DKM-1150SV</option>
+                <option value="DKM-1350SV">DKM-1350SV</option>
+                <option value="DKM-1650SV">DKM-1650SV</option>
+                <option value="DKM-2250SV">DKM-2250SV</option>
+                <option value="DKM-2800SV">DKM-2800SV</option>
+            </select>
+            
+            <div id="especificaciones" class="especificaciones-container">
+                <!-- Aquí se mostrarán las especificaciones -->
+            </div>
+            
+            <button id="btnSiguiente" class="btn-primario" disabled>Siguiente</button>
+        </div>
+    </div>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Resumen de Cotización</h1>
+        <div class="cliente-info">
+            <h2>Datos del Cliente</h2>
+            <div id="datosCliente"></div>
+        </div>
+        
+        <div class="cotizacion-container">
+            <h2>Detalle de la Cotización</h2>
+            <table id="tablaCotizacion">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio (USD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se llenará con JavaScript -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <th id="totalCotizacion">$0.00</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <button id="btnSalir" class="btn-primario">Salir</button>
+    </div>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
+// Datos de las máquinas y sus especificaciones
+const maquinas = {
+    "DKM-130SV": {
+        precio: 23718,
+        especificaciones: {
+            "Screw diameter B": "30mm",
+            "Tie bar distance": "300x300mm",
+            "Injection weight": "133g"
+        },
+        equipos: [
+            { nombre: "Autocargador STL-300GE", precio: 496.80 },
+            { nombre: "Secador XHD-25KG", precio: 408.00 },
+            { nombre: "Molino XFS-180", precio: 862.80 },
+            { nombre: "Torre de enfriamiento 10T", precio: 952.80 },
+            { nombre: "Chiller de agua SC-05WCI", precio: 2208.00 },
+            { nombre: "Chiller de aire SC-10ACI", precio: 4416.00 }
+        ]
+    },
+    "DKM-180SV": {
+        precio: 28580,
+        especificaciones: {
+            "Screw diameter B": "35mm",
+            "Tie bar distance": "350x350mm",
+            "Injection weight": "180g"
+        },
+        equipos: [
+            { nombre: "Autocargador STL-300GN", precio: 549.60 },
+            { nombre: "Secador XHD-50KG", precio: 502.80 },
+            { nombre: "Molino XFS-230", precio: 1290.00 },
+            { nombre: "Torre de enfriamiento 10T", precio: 952.80 },
+            { nombre: "Chiller de agua SC-08WCI", precio: 3588.00 },
+            { nombre: "Chiller de aire SC-10ACI", precio: 4416.00 }
+        ]
+    },
+    // ... (agregar el resto de las máquinas con el mismo formato)
+    "DKM-2800SV": {
+        precio: 578856,
+        especificaciones: {
+            "Screw diameter B": "110mm",
+            "Tie bar distance": "1200x1200mm",
+            "Injection weight": "2800g"
+        },
+        equipos: [
+            { nombre: "Autocargador STL-7.5HP", precio: 1774.80 },
+            { nombre: "Secador XHD-600KG", precio: 2440.80 },
+            { nombre: "Molino XFS-1000", precio: 12379.20 },
+            { nombre: "Torre de enfriamiento 150T", precio: 6795.60 },
+            { nombre: "Chiller de agua SC-50WCI", precio: 16560.00 },
+            { nombre: "Chiller de aire SC-40ACI", precio: 16560.00 }
+        ]
+    }
+};
+
+// Almacenamiento local de datos del cliente
+let clienteData = {};
+
+// Función para guardar datos del cliente
+function guardarCliente(data) {
+    clienteData = data;
+    localStorage.setItem('clienteData', JSON.stringify(data));
+}
+
+// Función para obtener datos del cliente
+function obtenerCliente() {
+    const data = localStorage.getItem('clienteData');
+    return data ? JSON.parse(data) : {};
+}
+document.addEventListener('DOMContentLoaded', function() {
+    // Navegación entre páginas
+    if (document.getElementById('nuevoCliente')) {
+        document.getElementById('nuevoCliente').addEventListener('click', function() {
+            window.location.href = 'formulario.html';
+        });
+    }
+
+    // Manejo del formulario de cliente
+    if (document.getElementById('formCliente')) {
+        document.getElementById('formCliente').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cliente = {
+                nombre: document.getElementById('nombre').value,
+                empresa: document.getElementById('empresa').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                pais: document.getElementById('pais').value,
+                ciudad: document.getElementById('ciudad').value,
+                industria: document.getElementById('industria').value
+            };
+            
+            guardarCliente(cliente);
+            window.location.href = 'seleccion-maquina.html';
+        });
+    }
+
+    // Selección de máquina
+    if (document.getElementById('selectMaquina')) {
+        const selectMaquina = document.getElementById('selectMaquina');
+        const btnSiguiente = document.getElementById('btnSiguiente');
+        const especificacionesDiv = document.getElementById('especificaciones');
+        
+        selectMaquina.addEventListener('change', function() {
+            const modelo = this.value;
+            if (modelo) {
+                const maquina = maquinas[modelo];
+                
+                // Mostrar especificaciones
+                let html = `<h3>${modelo}</h3>`;
+                html += `<p><strong>Precio:</strong> $${maquina.precio.toLocaleString()}</p>`;
+                html += '<h4>Especificaciones técnicas:</h4><ul>';
+                
+                for (const [key, value] of Object.entries(maquina.especificaciones)) {
+                    html += `<li><strong>${key}:</strong> ${value}</li>`;
+                }
+                
+                html += '</ul>';
+                especificacionesDiv.innerHTML = html;
+                
+                // Habilitar botón siguiente
+                btnSiguiente.disabled = false;
+                btnSiguiente.onclick = function() {
+                    localStorage.setItem('maquinaSeleccionada', modelo);
+                    window.location.href = 'cotizacion.html';
+                };
+            } else {
+                especificacionesDiv.innerHTML = '';
+                btnSiguiente.disabled = true;
+            }
+        });
+    }
+
+    // Generación de cotización
+    if (document.getElementById('tablaCotizacion')) {
+        const modelo = localStorage.getItem('maquinaSeleccionada');
+        const cliente = obtenerCliente();
+        const maquina = maquinas[modelo];
+        
+        // Mostrar datos del cliente
+        let clienteHtml = `
+            <p><strong>Nombre:</strong> ${cliente.nombre}</p>
+            <p><strong>Empresa:</strong> ${cliente.empresa}</p>
+            <p><strong>Contacto:</strong> ${cliente.email} | ${cliente.telefono}</p>
+            <p><strong>Ubicación:</strong> ${cliente.ciudad}, ${cliente.pais}</p>
+        `;
+        document.getElementById('datosCliente').innerHTML = clienteHtml;
+        
+        // Llenar tabla de cotización
+        const tbody = document.querySelector('#tablaCotizacion tbody');
+        let total = maquina.precio;
+        
+        // Agregar máquina principal
+        let row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${modelo}</td>
+            <td>$${maquina.precio.toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+        
+        // Agregar equipos auxiliares
+        maquina.equipos.forEach(equipo => {
+            row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${equipo.nombre}</td>
+                <td>$${equipo.precio.toLocaleString()}</td>
+            `;
+            tbody.appendChild(row);
+            total += equipo.precio;
+        });
+        
+        // Mostrar total
+        document.getElementById('totalCotizacion').textContent = `$${total.toLocaleString()}`;
+        
+        // Botón salir
+        document.getElementById('btnSalir').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    }
+});
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2, h3, h4 {
+    color: #2c3e50;
+}
+
+/* Botones */
+.btn-primario {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+    margin: 20px auto;
+    width: 200px;
+    text-align: center;
+}
+
+.btn-primario:hover {
+    background-color: #2980b9;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Especificaciones */
+.especificaciones-container {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Logo */
+.logo {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.logo img {
+    max-width: 200px;
+    height: auto;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .btn-primario {
+        width: 100%;
+    }
+}
