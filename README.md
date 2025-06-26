@@ -1,4 +1,4 @@
-<img src="[URL_DEL_LOGO](https://dkmchina.com/wp-content/uploads/2021/07/logo.svg)" alt="DKM - Discover Key of Molding" width="200">
+<img src="(https://dkmchina.com/wp-content/uploads/2021/07/logo.svg)" alt="DKM - Discover Key of Molding" width="200">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
